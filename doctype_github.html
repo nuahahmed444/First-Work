@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click the Box Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    #gameArea {
+      width: 400px;
+      height: 400px;
+      margin: 20px auto;
+      position: relative;
+      background-color: #f0f0f0;
+      border: 2px solid #333;
+    }
+    .box {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      position: absolute;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Click the Box Game</h1>
+  <p>Time Left: <span id="time">10</span> seconds</p>
+  <p>Score: <span id="score">0</span></p>
+  <div id="gameArea"></div>
+
+  <script>
+    const gameArea = document.getElementById('gameArea');
+    const scoreDisplay = document.getElementById('score');
+    const timeDisplay = document.getElementById('time');
+
+    let score = 0;
+    let timeLeft = 10;
+    let gameInterval;
+
+    function getRandomPosition() {
+      const x = Math.floor(Math.random() * 350);
+      const y = Math.floor(Math.random() * 350);
+      return { x, y };
+    }
+
+    function createBox() {
+      const box = document.createElement('div');
+      box.classList.add('box');
+      const { x, y } = getRandomPosition();
+      box.style.left = x + 'px';
+      box.style.top = y + 'px';
+
+      box.addEventListener('click', () => {
+        score++;
+        scoreDisplay.textContent = score;
+        gameArea.removeChild(box);
+        createBox();
+      });
+
+      gameArea.appendChild(box);
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 10;
+      scoreDisplay.textContent = score;
+      timeDisplay.textContent = timeLeft;
+
+      createBox();
+
+      gameInterval = setInterval(() => {
+        timeLeft--;
+        timeDisplay.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(gameInterval);
+          gameArea.innerHTML = '';
+          alert("Time's up! Your score is: " + score);
+        }
+      }, 1000);
+    }
+
+    // Start game automatically
+    startGame();
+  </script>
+</body>
+                       </html>
